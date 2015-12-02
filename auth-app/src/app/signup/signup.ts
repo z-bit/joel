@@ -1,26 +1,27 @@
-import { Component, View } from 'angular2/angular2';
+import { Component, View, CORE_DIRECTIVES } from 'angular2/angular2';
 import { Router, RouterLink } from 'angular2/router';
+
 import { status, json } from '../utils/fetch';
 
-let styles = require('./login.css');
-let template = require('./login.html');
+let styles = require('./signup.css');
+let template = require('./signup.html');
 
 @Component({
-    selector: 'login'
+    selector: 'signup'
 })
 @View({
-    directives: [ RouterLink ],
+    directives: [ RouterLink, CORE_DIRECTIVES ],
     template: template,
     styles: [ styles ]
 })
-export class Login {
+export class Signup {
     constructor(public router: Router){
     }
 
-    login(event, username, password) {
+    signup(event, username, password) {
         event.preventDefault();
         window
-            .fetch('http://localhost:3001/sessions/create', {
+            .fetch('http://localhost:3001/users', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -31,8 +32,8 @@ export class Login {
             .then(status)
             .then(json)
             .then((response: any) => {
-                localStorage.setItem('jwt', resonse.id_token);
-                this.router.parent.navigateByUrl('/home');
+                localStorage.setItem('jwt', response.id_token);
+                this.router.navigateByUrl('/home');
             })
             .catch((error) => {
                 alert(error.message);
@@ -41,8 +42,8 @@ export class Login {
         ;
     }
 
-    signup(event) {
+    login(event) {
         event.preventDefault();
-        this.router.parent.navigateByUrl('/signup');
+        this.router.parent.navigateByUrl('/login');
     }
 }
